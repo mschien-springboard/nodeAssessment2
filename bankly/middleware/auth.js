@@ -12,8 +12,8 @@ function requireLogin(req, res, next) {
     } else {
       return next({ status: 401, message: 'Unauthorized' });
     }
-  } catch (err) {
-    return next(err);
+  } catch (e) {
+    return next(e);
   }
 }
 
@@ -26,10 +26,10 @@ function requireAdmin(req, res, next) {
     } else {
       return next({ status: 401, message: 'Unauthorized' });
     }
-  } catch (err) {
-    return next(err);
-  }
-}
+  } catch (e) {
+    return next(e);
+  };
+};
 
 /** Authentication Middleware: put user on request
  *
@@ -46,18 +46,20 @@ function requireAdmin(req, res, next) {
 
 function authUser(req, res, next) {
   try {
-    const token = req.body._token || req.query._token;
-    if (token) {
-      let payload = jwt.decode(token);
+    const _token = req.body._token || req.query._token
+    if (_token) {
+      // BUG: Uses decode instead of verify or secret_key
+      // let payload = jwt.decode(token);
+      let payload = jwt.verify(_token, SECRET_KEY);
       req.curr_username = payload.username;
       req.curr_admin = payload.admin;
     }
     return next();
-  } catch (err) {
-    err.status = 401;
-    return next(err);
-  }
-} // end
+  } catch (e) {
+    e.status = 401;
+    return next(e);
+  };
+}; // end
 
 module.exports = {
   requireLogin,

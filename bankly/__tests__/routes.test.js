@@ -90,6 +90,26 @@ describe("POST /auth/login", function() {
     expect(username).toBe("u1");
     expect(admin).toBe(false);
   });
+  test('disallow bad-username to log in', async function() {
+    const response = await request(app)
+      .post('/auth/login')
+      .send({
+        username: 'u1',
+        password: 'pwd1'
+      });
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual({ token: expect.any(String) });
+  });
+
+  test('should disallow deny good-user/bad-password to log in', async function() {
+    const response = await request(app)
+      .post('/auth/login')
+      .send({
+        username: 'not-a-user',
+        password: 'not-the-password'
+      });
+    expect(response.statusCode).toBe(401);
+  });
 });
 
 describe("GET /users", function() {
