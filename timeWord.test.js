@@ -6,7 +6,7 @@ describe("Timeword Function", () => {
     expect(timeWord("00:00")).toBe('midnight')
   })
   test("Handles AM and PM", () => {
-    expect(timeWord("12:09")).toBe("twelve oh nine pm");
+    expect(timeWord("11:09")).toBe("eleven oh nine am");
     expect(timeWord("23:23")).toBe("eleven twenty three pm");
   });
   test("Handles time to text", () => {
